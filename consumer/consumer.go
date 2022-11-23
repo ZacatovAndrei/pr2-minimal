@@ -20,7 +20,7 @@ func (c *Consumer) Start(id int, storage *list.List) {
 	c.Init(id)
 	log.Printf("Consumer #%v initialised", id)
 	for {
-		if p, ok := c.popResource(storage); ok {
+		if p, ok := c.receive(storage); ok {
 			log.Println("Payload acquired, processing")
 			p = c.process(p)
 			c.Send(p)
@@ -35,7 +35,7 @@ func (c *Consumer) Init(id int) {
 	c.id = id
 }
 
-func (c *Consumer) popResource(l *list.List) (Payload, bool) {
+func (c *Consumer) receive(l *list.List) (Payload, bool) {
 	QueueAccess.Lock()
 	defer QueueAccess.Unlock()
 	if l.Len() == 0 {

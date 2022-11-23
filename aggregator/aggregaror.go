@@ -23,14 +23,14 @@ func aggregator(Cl *list.List, Pl *list.List) {
 	for {
 		log.Printf("ConStack:%v\tProdStack:%v", ConsumerStack.Len(), ProducerStack.Len())
 		itemFound = false
-		// checking one of the stacks randomly
+		// Check one of the stacks randomly
 		state := rand.Intn(2)
-		// Taking random Element from top
+		// Pop Element from top
 		switch state {
 		case 0:
-			o, itemFound = getResource(Cl, &CSAccess)
+			o, itemFound = receive(Cl, &CSAccess)
 		case 1:
-			o, itemFound = getResource(Pl, &PSAccess)
+			o, itemFound = receive(Pl, &PSAccess)
 		}
 		if !itemFound {
 			log.Println("Buffer is empty, waiting")
@@ -49,7 +49,7 @@ func aggregator(Cl *list.List, Pl *list.List) {
 
 }
 
-func getResource(l *list.List, m *sync.Mutex) (Payload, bool) {
+func receive(l *list.List, m *sync.Mutex) (Payload, bool) {
 	m.Lock()
 	defer m.Unlock()
 	if l.Len() == 0 {
@@ -89,4 +89,5 @@ func sendTo(address string, pl Payload) {
 			time.Sleep(TimeUnit)
 		}
 	}
+	return
 }

@@ -1,4 +1,4 @@
-build:
+build: clean
 	-cd producer && go build 
 	-cd aggregator && go build
 	-cd consumer && go build 
